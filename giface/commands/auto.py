@@ -4,6 +4,7 @@ import click
 from pathlib import Path
 import yaml
 from PIL import Image
+import face_recognition
 
 from giface.config import valid_conf
 
@@ -38,19 +39,19 @@ def auto(source_images):
             or str(Path(image).suffix).lower() not in ['.jpg', '.jpeg', '.png']
         ):
             continue
-        # Prepare images for GIF 
-        im = Image.open(image)  # Pillow image object
-        im.thumbnail(size)  # Streamline size
-        width, height = im.size   # Get dimensions
-        left = (width - new_width)/2
-        top = (height - new_height)/2
-        right = (width + new_width)/2
-        bottom = (height + new_height)/2 
-        im.crop((left, top, right, bottom))
 
+        image_of_people = face_recognition.load_image_file(image)
+        unknown_face_locations = face_recognition.face_locations(image_of_people)
+        for face_location in unknown_face_locations:
+            top, right, bottom, left = face_location
+            face_image = image_of_people[top:bottom, left:right]
+            im = Image.fromarray(face_image)
+
+        # Prepare image for GIF and add to list
+        im.thumbnail(size)  # Streamline size
         images.append(im)
 
 
     images[1].save('final.gif', save_all=True, append_images=images[1:],
-            duration=500, loop=1)
+            duration=333, loop=1)
 
