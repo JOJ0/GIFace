@@ -29,22 +29,35 @@ def auto(source_images):
                 in ['.jpg', '.jpeg', '.png'])
     ]
     # Use first picture as example for face to recognize
+    print(f"Processing first, catching face: {image_paths[0]}")
     recognize_face = face_recognition.load_image_file(image_paths[0])
     the_face_encoding = face_recognition.face_encodings(recognize_face)[0]
+    print(f"Debug: This is the faces encoding: {the_face_encoding}")
     # Process rest of pictures
     images = []
-    for image in image_paths:
+    for image in image_paths[1:]:
+        print(f"Processing {image}")
         image_of_people = face_recognition.load_image_file(image)
         unknown_face_locations = face_recognition.face_locations(image_of_people)
         for face_location in unknown_face_locations:  # Loop found faces
             top, right, bottom, left = face_location  # Save coordinates
             found_face = image_of_people[top:bottom, left:right]
             # Check if it's the face we are looking for
-            compared = face_recognition.compare_faces([the_face_encoding], found_face)
+            try:
+                compared = face_recognition.compare_faces(
+                        [the_face_encoding], found_face)
+            except ValueError as verr:
+                print(f"ValueError catched: {verr}")
+            except IndexError as ierr:
+                print(f"ValueError catched: {ierr}")
+
             if compared[0] is True:
+                print(f"Found matching face in {image}")
                 im = Image.fromarray(found_face)
                 im.thumbnail(size)  # Streamline size,
                 images.append(im)  # and finally save to images list
+            else:
+                print(f"Face not matching in {image}")
 
     # Save gif
     images[1].save('final.gif', save_all=True, append_images=images[1:],
