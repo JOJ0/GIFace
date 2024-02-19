@@ -11,15 +11,6 @@ from giface.config import valid_conf
 
 @click.command()
 @click.argument('source_images', nargs=-1, type=click.Path(exists=True))
-# @click.argument('post_md_file', nargs=1, type=click.Path(exists=True))
-# @click.option('--write', '-w', is_flag=True,
-#               help="Do the conversion. Dry-run is default.")
-# @click.option('--force', '-f', is_flag=True,
-#               help="Overwrite if existing already.")
-# @click.option('--gallery', '-g', type=str,
-#               help="Create collection markdown files for photo gallery as well.")  # noqa
-# @click.option('--start', '-s', type=int, default=1, show_default=True,
-#               help="Start naming pics and gallery files with this number.")
 def auto(source_images):
     """Generates animated GIF from a bunch of pictures
 
