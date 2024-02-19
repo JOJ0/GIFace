@@ -37,23 +37,28 @@ def auto(source_images):
     images = []
     for image in image_paths[1:]:
         print(f"Processing {image}")
-        image_of_people = face_recognition.load_image_file(image)
-        unknown_face_locations = face_recognition.face_locations(image_of_people)
-        for face_location in unknown_face_locations:  # Loop found faces
-            top, right, bottom, left = face_location  # Save coordinates
-            found_face = image_of_people[top:bottom, left:right]
+        unknown_image = face_recognition.load_image_file(image)
+        unknown_face_locations = face_recognition.face_locations(unknown_image)
+        for i, location in enumerate(unknown_face_locations):
+            # Get face encoding for found face location by list id
+            unknown_face_encoding = face_recognition.face_encodings(
+                unknown_image)[i]
             # Check if it's the face we are looking for
             try:
                 compared = face_recognition.compare_faces(
-                        [the_face_encoding], found_face)
-            except ValueError as verr:
-                print(f"ValueError catched: {verr}")
+                        [the_face_encoding], unknown_face_encoding)
             except IndexError as ierr:
                 print(f"ValueError catched: {ierr}")
 
-            if compared[0] is True:
+            # Compare known face with unknown face
+            if compared[0] == True:
                 print(f"Found matching face in {image}")
-                im = Image.fromarray(found_face)
+                top, right, bottom, left = location
+                print("Debug: location:")
+                print(location)
+                im = Image.fromarray(
+                    unknown_image[top:bottom, left:right]
+                )
                 im.thumbnail(size)  # Streamline size,
                 images.append(im)  # and finally save to images list
             else:
