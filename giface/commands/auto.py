@@ -8,6 +8,7 @@ import face_recognition
 from datetime import datetime
 
 from giface.config import valid_conf
+from giface.cropped_thumb import cropped_thumbnail
 
 
 @click.command()
@@ -65,7 +66,7 @@ def auto(source_images, size, outfile):
                 im = Image.fromarray(
                     unknown_image[top:bottom, left:right]
                 )
-                im.thumbnail(final_size)  # Streamline size
+                im = cropped_thumbnail(im, final_size)  # Streamline size
                 print("Debug: Img size:")
                 print(im.size)
                 images.append(im)  # and finally save to images list
