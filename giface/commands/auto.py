@@ -11,7 +11,9 @@ from giface.config import valid_conf
 
 @click.command()
 @click.argument('source_images', nargs=-1, type=click.Path(exists=True))
-def auto(source_images):
+@click.option('--size', '-s', default='100', type=int)
+@click.option('--outfile', '-o', type=int)
+def auto(source_images, size, outfile):
     """Generates animated GIF from a bunch of pictures
 
     while using the first found face to recognize in subsequent pics.
@@ -19,9 +21,7 @@ def auto(source_images):
     Takes a list of pictures as argument. Use shell globbing to pass a whole
     folder of pics (use /path/*)
     """
-    size = (333, 333)
-    new_width = 333
-    new_height = 333
+    final_size = (size, size)
     # Filter out non-valid files
     image_paths = [
             image for image in source_images
@@ -59,12 +59,15 @@ def auto(source_images):
                 im = Image.fromarray(
                     unknown_image[top:bottom, left:right]
                 )
-                im.thumbnail(size)  # Streamline size,
+                im.thumbnail(final_size)  # Streamline size
                 images.append(im)  # and finally save to images list
             else:
                 print(f"Face not matching in {image}")
 
+    if not outfile:
+        filename = datetime.now().strftime('%m-/%d-/%Y_%H-%M') + '.png'
+        outfile = Path('~/Pictures') / filename
     # Save gif
-    images[1].save('final.gif', save_all=True, append_images=images[1:],
-            duration=300, loop=1)
+    images[1].save(outfile, save_all=True, append_images=images[1:],
+            duration=100, loop=0)
 
