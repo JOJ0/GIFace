@@ -13,7 +13,7 @@ from giface.config import valid_conf
 @click.command()
 @click.argument('source_images', nargs=-1, type=click.Path(exists=True))
 @click.option('--size', '-s', default='100', type=int)
-@click.option('--outfile', '-o', type=int)
+@click.option('--outfile', '-o', type=str)
 def auto(source_images, size, outfile):
     """Generates animated GIF from a bunch of pictures
 
