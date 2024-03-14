@@ -73,8 +73,8 @@ def auto(source_images, size, outfile):
         print('')
 
     if not outfile:
-        filename = datetime.now().strftime('%m-%d-%Y_%H-%M') + '.png'
-        outfile = Path(Path.home() / 'Pictures') / filename
+        name = "GIFace_" + datetime.now().strftime('%m-%d-%Y_%H-%M') + '.gif'
+        outfile = Path(Path.home() / 'Pictures') / name
     # Save gif
     print(f"Saving to {outfile}")
     images[1].save(outfile, save_all=True, append_images=images[1:],
