@@ -8,6 +8,8 @@ from setuptools import setup, find_packages
 requirements = [
     'Click>=6.0',
     'confuse',
+    'Pillow',
+    'face-recognition'
 ]
 
 setup(
