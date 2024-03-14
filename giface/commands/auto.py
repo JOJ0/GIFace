@@ -5,6 +5,7 @@ from pathlib import Path
 import yaml
 from PIL import Image
 import face_recognition
+from datetime import datetime
 
 from giface.config import valid_conf
 
@@ -30,9 +31,14 @@ def auto(source_images, size, outfile):
     ]
     # Use first picture as example for face to recognize
     print(f"Processing first, catching face: {image_paths[0]}")
-    recognize_face = face_recognition.load_image_file(image_paths[0])
-    the_face_encoding = face_recognition.face_encodings(recognize_face)[0]
-    print(f"Debug: This is the faces encoding: {the_face_encoding}")
+    try:
+        recognize_face = face_recognition.load_image_file(image_paths[0])
+        the_face_encoding = face_recognition.face_encodings(recognize_face)[0]
+        print(f"Debug: This is the faces encoding: {the_face_encoding}")
+    except IndexError as ierr:
+        print(f"IndexError: {ierr}. No face in first picture detected, sorry!")
+        raise SystemExit(1)
+
     # Process rest of pictures
     images = []
     for image in image_paths[1:]:
