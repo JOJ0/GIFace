@@ -48,7 +48,7 @@ def auto(source_images):
                 compared = face_recognition.compare_faces(
                         [the_face_encoding], unknown_face_encoding)
             except IndexError as ierr:
-                print(f"ValueError catched: {ierr}")
+                print(f"IndexError catched: {ierr}")
 
             # Compare known face with unknown face
             if compared[0] == True:
