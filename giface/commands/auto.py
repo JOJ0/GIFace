@@ -34,7 +34,7 @@ def auto(source_images, size, outfile):
     try:
         recognize_face = face_recognition.load_image_file(image_paths[0])
         the_face_encoding = face_recognition.face_encodings(recognize_face)[0]
-        print(f"Debug: This is the faces encoding: {the_face_encoding}")
+        # print(f"Debug: This is the faces encoding: {the_face_encoding}")
     except IndexError as ierr:
         print(f"IndexError: {ierr}. No face in first picture detected, sorry!")
         raise SystemExit(1)
@@ -54,26 +54,29 @@ def auto(source_images, size, outfile):
                 compared = face_recognition.compare_faces(
                         [the_face_encoding], unknown_face_encoding)
             except IndexError as ierr:
-                print(f"IndexError catched: {ierr}")
+                print(f"IndexError: {ierr}")
 
             # Compare known face with unknown face
             if compared[0] == True:
-                print(f"Found matching face in {image}")
+                print(f"Matching face in {image}")
                 top, right, bottom, left = location
-                print("Debug: location:")
-                print(location)
+                # print("Debug: location:")
+                # print(location)
                 im = Image.fromarray(
                     unknown_image[top:bottom, left:right]
                 )
                 im.thumbnail(final_size)  # Streamline size
                 images.append(im)  # and finally save to images list
             else:
-                print(f"Face not matching in {image}")
+                print(f"Not-matching face in {image}")
+        # After each picture, make some space for readability
+        print('')
 
     if not outfile:
         filename = datetime.now().strftime('%m-%d-%Y_%H-%M') + '.png'
         outfile = Path(Path.home() / 'Pictures') / filename
     # Save gif
+    print(f"Saving to {outfile}")
     images[1].save(outfile, save_all=True, append_images=images[1:],
             duration=100, loop=0)
 
