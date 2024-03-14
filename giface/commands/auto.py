@@ -39,9 +39,9 @@ def auto(source_images, size, outfile):
         print(f"IndexError: {ierr}. No face in first picture detected, sorry!")
         raise SystemExit(1)
 
-    # Process rest of pictures
+    # Process pictures (including the first one)
     images = []
-    for image in image_paths[1:]:
+    for image in image_paths:
         print(f"Processing {image}")
         unknown_image = face_recognition.load_image_file(image)
         unknown_face_locations = face_recognition.face_locations(unknown_image)
@@ -77,6 +77,6 @@ def auto(source_images, size, outfile):
         outfile = Path(Path.home() / 'Pictures') / name
     # Save gif
     print(f"Saving to {outfile}")
-    images[1].save(outfile, save_all=True, append_images=images[1:],
+    images[0].save(outfile, save_all=True, append_images=images[1:],
             duration=100, loop=0)
 
