@@ -12,7 +12,7 @@ from giface.config import valid_conf
 
 @click.command()
 @click.argument('source_images', nargs=-1, type=click.Path(exists=True))
-@click.option('--size', '-s', default='100', type=int)
+@click.option('--size', '-s', default='128', type=int)
 @click.option('--outfile', '-o', type=str)
 def auto(source_images, size, outfile):
     """Generates animated GIF from a bunch of pictures
@@ -66,6 +66,8 @@ def auto(source_images, size, outfile):
                     unknown_image[top:bottom, left:right]
                 )
                 im.thumbnail(final_size)  # Streamline size
+                print("Debug: Img size:")
+                print(im.size)
                 images.append(im)  # and finally save to images list
             else:
                 print(f"Not-matching face in {image}")
