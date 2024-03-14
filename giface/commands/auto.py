@@ -71,8 +71,8 @@ def auto(source_images, size, outfile):
                 print(f"Face not matching in {image}")
 
     if not outfile:
-        filename = datetime.now().strftime('%m-/%d-/%Y_%H-%M') + '.png'
-        outfile = Path('~/Pictures') / filename
+        filename = datetime.now().strftime('%m-%d-%Y_%H-%M') + '.png'
+        outfile = Path(Path.home() / 'Pictures') / filename
     # Save gif
     images[1].save(outfile, save_all=True, append_images=images[1:],
             duration=100, loop=0)
