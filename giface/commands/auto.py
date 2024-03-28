@@ -81,5 +81,5 @@ def auto(source_images, size, outfile):
     # Save gif
     print(f"Saving to {outfile}")
     images[0].save(outfile, save_all=True, append_images=images[1:],
-            duration=100, loop=0)
+            duration=66.66, loop=0)
 
