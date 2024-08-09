@@ -15,7 +15,10 @@ from giface.cropped_thumb import cropped_thumbnail
 @click.argument('source_images', nargs=-1, type=click.Path(exists=True))
 @click.option('--size', '-s', default='128', type=int)
 @click.option('--outfile', '-o', type=str)
-def auto(source_images, size, outfile):
+@click.option('--first', type=click.Path(exists=True),
+              help='''Specify`the first` image. Otherwise simply the first of
+              source_images will be used.''')
+def auto(source_images, size, outfile, first):
     """Generates animated GIF from a bunch of pictures
 
     while using the first found face to recognize in subsequent pics.
@@ -24,12 +27,14 @@ def auto(source_images, size, outfile):
     folder of pics (use /path/*)
     """
     final_size = (size, size)
-    # Filter out non-valid files
+    # While gathering list of files, filter out non-valid ones
     image_paths = [
             image for image in source_images
             if (str(Path(image).suffix).lower()
                 in ['.jpg', '.jpeg', '.png'])
     ]
+    if first:
+        image_paths.insert(0, first)
     # Use first picture as example for face to recognize
     print(f"Processing first, catching face: {image_paths[0]}")
     try:
