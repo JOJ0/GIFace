@@ -6,6 +6,8 @@ import yaml
 from PIL import Image
 import face_recognition
 from datetime import datetime
+from PIL import ImageFont
+from PIL import ImageDraw
 
 from giface.config import valid_conf
 from giface.cropped_thumb import cropped_thumbnail
@@ -26,6 +28,28 @@ def auto(source_images, size, outfile, first):
     Takes a list of pictures as argument. Use shell globbing to pass a whole
     folder of pics (use /path/*)
     """
+    def add_watermark(picture, color, position):
+        "Adds a watermark in the given rgb color (3 value tuple)."
+        wm_text = "joj0/giface"
+        watermark_image = picture.copy()
+        draw = ImageDraw.Draw(watermark_image)
+
+        # Find center of image,
+        width, height = picture.size
+        xcent, ycent = int(width / 2), int(height / 2)
+        # and decide on a font size
+        font_size = ycent if xcent > ycent else xcent
+        # position vertically, just a little from the left
+        xtext = width - 2
+        # position horizontally, just a few px from the top or the bottom
+        ytext = 5 if position == 'top' else height - 5
+        font = ImageFont.truetype(
+                "/usr/share/fonts/liberation/LiberationSans-Bold.ttf",
+                int(font_size/6))
+        # Add watermark
+        draw.text((xtext, ytext), wm_text, fill=color, font=font, anchor='rm')
+        return watermark_image
+
     final_size = (size, size)
     # While gathering list of files, filter out non-valid ones
     image_paths = [
@@ -79,6 +103,15 @@ def auto(source_images, size, outfile, first):
                 print(f"Not-matching face in {image}")
         # After each picture, make some space for readability
         print('')
+
+    # Add watermark to the second half of the pics
+    wm_color = (255, 255, 255)
+    markfrom = len(images) / 2
+    position = 'top'
+    for cnt,img in enumerate(images):
+        if cnt > markfrom:
+            images[cnt] = add_watermark(images[cnt], wm_color, position)
+
 
     if not outfile:
         name = "GIFace_" + datetime.now().strftime('%m-%d-%Y_%H-%M') + '.gif'
