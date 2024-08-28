@@ -77,7 +77,7 @@ def auto(source_images, size, outfile, first):
     for image in image_paths:
         print(f"Processing {image}")
         unknown_image = face_recognition.load_image_file(image)
-        unknown_face_locations = face_recognition.face_locations(unknown_image)
+        unknown_face_locations = face_recognition.face_locations(unknown_image, number_of_times_to_upsample=1, model="cnn")
         for i, location in enumerate(unknown_face_locations):
             # Get face encoding for found face location by list id
             unknown_face_encoding = face_recognition.face_encodings(
