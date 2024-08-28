@@ -99,8 +99,8 @@ def auto(source_images, size, outfile, first):
                     unknown_image[top:bottom, left:right]
                 )
                 im = cropped_thumbnail(im, final_size)  # Streamline size
-                print("Debug: Img size:")
-                print(im.size)
+                # print("Debug: Img size:")
+                # print(im.size)
                 images.append(im)  # and finally save to images list
             else:
                 print(f"Not-matching face in {image}")
