@@ -9,7 +9,8 @@ requirements = [
     'Click>=6.0',
     'confuse',
     'Pillow',
-    'face-recognition'
+    'face-recognition',
+    'pillow-heif'
 ]
 
 setup(
