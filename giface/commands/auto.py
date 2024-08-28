@@ -8,10 +8,13 @@ import face_recognition
 from datetime import datetime
 from PIL import ImageFont
 from PIL import ImageDraw
+from pillow_heif import register_heif_opener
 
 from giface.config import valid_conf
 from giface.cropped_thumb import cropped_thumbnail
 
+
+register_heif_opener()
 
 @click.command()
 @click.argument('source_images', nargs=-1, type=click.Path(exists=True))
@@ -55,7 +58,7 @@ def auto(source_images, size, outfile, first):
     image_paths = [
             image for image in source_images
             if (str(Path(image).suffix).lower()
-                in ['.jpg', '.jpeg', '.png'])
+                in ['.jpg', '.jpeg', '.png', '.heic'])
     ]
     if first:
         image_paths.insert(0, first)
