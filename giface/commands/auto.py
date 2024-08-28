@@ -19,11 +19,12 @@ register_heif_opener()
 @click.command()
 @click.argument('source_images', nargs=-1, type=click.Path(exists=True))
 @click.option('--size', '-s', default='128', type=int)
+@click.option('--tolerance', '-t', default='0.6', type=float)
 @click.option('--outfile', '-o', type=str)
 @click.option('--first', type=click.Path(exists=True),
               help='''Specify`the first` image. Otherwise simply the first of
               source_images will be used.''')
-def auto(source_images, size, outfile, first):
+def auto(source_images, size, outfile, first, tolerance):
     """Generates animated GIF from a bunch of pictures
 
     while using the first found face to recognize in subsequent pics.
@@ -85,7 +86,7 @@ def auto(source_images, size, outfile, first):
             # Check if it's the face we are looking for
             try:
                 compared = face_recognition.compare_faces(
-                        [the_face_encoding], unknown_face_encoding)
+                        [the_face_encoding], unknown_face_encoding, tolerance=tolerance)
             except IndexError as ierr:
                 print(f"IndexError: {ierr}")
 
